@@ -18,4 +18,4 @@ samples, guidance on mobile development, and a full API reference.
 
 # 个人学习文档
 
-[个人学习文档](https://www.yuque.com/docs/share/bb542e0e-6478-433f-a20b-332ff5009c95?# 《搭建（mac环境）》)
+[个人学习文档](https://www.yuque.com/docs/share/bb542e0e-6478-433f-a20b-332ff5009c95)
