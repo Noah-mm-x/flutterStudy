@@ -8,113 +8,44 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '欢迎来',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        primaryColor: Colors.blue,
+      home: Scaffold(
+        // appBar: AppBar(),
+        body: PageContent(),
       ),
-      home: RandomWords(),
+      theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-//Stateful widgets 持有的状态可能在widget生命周期中发生变化.
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => RandomWordsState();
-}
-
-// class RandomWordsState extends State<RandomWords> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final wordPair = new WordPair.random();
-//     return new Text(wordPair.asPascalCase);
-//   }
-// }
-class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _saved = Set<WordPair>();
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-
-  //添加路由
-  void _pushSaved() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          final tiles = _saved.map(
-            (pair) {
-              return ListTile(
-                title: Text(
-                  pair.asPascalCase,
-                  style: _biggerFont,
-                ),
-              );
-            },
-          );
-          final divided = ListTile.divideTiles(
-            context: context,
-            tiles: tiles,
-          ).toList();
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('保存'),
-            ),
-            body: ListView(children: divided),
-          );
-        },
-      ),
-    );
-  }
-
-  @override
+//顶部图片
+class PageContent extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('开始吧'),
-        actions: <Widget>[
-          IconButton(onPressed: _pushSaved, icon: Icon(Icons.list))
-        ],
-      ),
-      body: _buildSuggestions(),
-    );
-  }
-
-  Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-          // 语法 "i ~/ 2" 表示i除以2，但返回值是整形（向下取整），比如i为：1, 2, 3, 4, 5
-          // 时，结果为0, 1, 1, 2, 2， 这可以计算出ListView中减去分隔线后的实际单词对数量
-          final index = i ~/ 2;
-          if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        });
-  }
-
-  Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair);
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-      trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
-        color: alreadySaved ? Colors.red : null,
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(pair);
-          } else {
-            _saved.add(pair);
-          }
-        });
-      },
+    return ListView(
+      children: <Widget>[
+        Image.asset(
+          'images/top1.jpeg',
+          height: 200.0,
+          fit: BoxFit.cover,
+        ),
+        const ListTile(
+          title: Text(
+            '仁王2',
+            style:
+                TextStyle(fontSize: 20, color: Color.fromRGBO(51, 51, 51, 1)),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+          child: Text(
+            '仁王2作为粉丝们期盼已久的续作,和一代相比自然有不少不同之处,今天我们给大家带来了仁王2新内容介绍一览和仁王2新系统详解,感兴趣的小伙伴不要错过了,一起来看看吧。',
+            style: TextStyle(
+                fontSize: 14, color: Color.fromRGBO(102, 102, 102, 1)),
+            softWrap: true,
+          ),
+        ),
+      ],
     );
   }
 }
