@@ -29,14 +29,48 @@ class RandomWords extends StatefulWidget {
 // }
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
-  final _saved = new Set<WordPair>();
+  final _saved = Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
+
+  //添加路由
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          final tiles = _saved.map(
+            (pair) {
+              return ListTile(
+                title: Text(
+                  pair.asPascalCase,
+                  style: _biggerFont,
+                ),
+              );
+            },
+          );
+          final divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('保存'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('开始吧'),
+        actions: <Widget>[
+          IconButton(onPressed: _pushSaved, icon: Icon(Icons.list))
+        ],
       ),
       body: _buildSuggestions(),
     );
@@ -70,9 +104,9 @@ class RandomWordsState extends State<RandomWords> {
       ),
       onTap: () {
         setState(() {
-          if(alreadySaved){
+          if (alreadySaved) {
             _saved.remove(pair);
-          }else{
+          } else {
             _saved.add(pair);
           }
         });
