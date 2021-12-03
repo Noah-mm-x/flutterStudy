@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+import 'dart:convert';
+import './model/card_model.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(MyApp());
 
@@ -24,7 +26,7 @@ class PageContent extends StatelessWidget {
     return ListView(
       children: <Widget>[
         Image.asset(
-          'images/top1.jpeg',
+          'assets/images/top1.jpeg',
           height: 200.0,
           fit: BoxFit.cover,
         ),
@@ -32,7 +34,7 @@ class PageContent extends StatelessWidget {
           title: Text(
             '仁王2',
             style:
-                TextStyle(fontSize: 20, color: Color.fromRGBO(51, 51, 51, 1)),
+            TextStyle(fontSize: 20, color: Color.fromRGBO(51, 51, 51, 1)),
             textAlign: TextAlign.center,
           ),
         ),
@@ -46,16 +48,53 @@ class PageContent extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.all(8.0),
-          margin: const EdgeInsets.all(15.0),
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-              border: Border.all(
-                  width: 1, color: const Color.fromRGBO(238, 238, 238, 1))),
-          child: Row(
-            children: [
-              Expanded(
-                  child: Column(
+          child: Card(),
+        )
+      ],
+    );
+  }
+}
+
+//封装card
+class Card extends StatefulWidget {
+  @override
+  createState() => CardState();
+}
+
+class CardState extends State<Card> {
+  List<CardModel> cardList = [];
+
+  @override
+  void _getData(){
+    rootBundle.loadString("assets/data/card.json").then((value) {
+      var map = json.decode(value);
+      print(map);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemBuilder: (context, i) {
+        // return _buildItem(cardList[i]);
+        return Text('dd');
+      },
+      shrinkWrap: true,
+    );
+  }
+
+  Widget _buildItem(CardModel card) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(15.0),
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+          border: Border.all(
+              width: 1, color: const Color.fromRGBO(238, 238, 238, 1))),
+      child: Row(
+        children: [
+          Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
@@ -68,27 +107,24 @@ class PageContent extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 4.0),
-                    child: const Text(
-                      '作者：九张',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromRGBO(102, 102, 102, 1),
-                      ),
-                    )
-                  )
-
+                      margin: const EdgeInsets.only(top: 4.0),
+                      child: const Text(
+                        '作者：九张',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(102, 102, 102, 1),
+                        ),
+                      ))
                 ],
               )),
-              Icon(
-                Icons.star,
-                color: Colors.red[500],
-              ),
-              const Text('12')
-            ],
+          Icon(
+            Icons.star,
+            color: Colors.red[500],
           ),
-        )
-      ],
+          const Text('12')
+        ],
+      ),
     );
   }
 }
+
