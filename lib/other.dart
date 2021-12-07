@@ -13,13 +13,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         primaryColor: Colors.blue,
       ),
-      home: RandomWords(),
+      home: const RandomWords(),
     );
   }
 }
 
 //Stateful widgets 持有的状态可能在widget生命周期中发生变化.
 class RandomWords extends StatefulWidget {
+  const RandomWords({Key? key}) : super(key: key);
+
   @override
   createState() => RandomWordsState();
 }
