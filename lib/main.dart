@@ -1,143 +1,102 @@
 import 'package:flutter/material.dart';
 
+
 void main() => runApp(const MyApp());
 
+//Stateless widgets 是不可变的, 这意味着它们的属性不能改变 - 所有的值都是最终的.
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '标题',
-      //用于指定那个路由为应用的首页
-      initialRoute: "/",
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        primaryColor: Colors.blue,
-      ),
-      //注册路由
-      routes: {
-        "/": (context) => const RouterContent(),
-        //把下面注释掉，才会执行onGenerateRoute
-        // "new_route": (context) => const NewRoute(text: '哈哈')
-      },
-      //onGenerateRoute 只会对命名路由生效
-      onGenerateRoute: (RouteSettings settings) {
-        return MaterialPageRoute(builder: (context) {
-          final String? routerName = settings.name;
-          print(routerName);
-          //下面这个判断可以改为判断用户是否登录
-          if (routerName == "new_route") {
-            return const UnKnown();
-          }
-          return const UnKnown();
-        });
-      },
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute(builder: (context) => const UnKnown());
-      },
-      // home: const RouterContent(),
-    );
-  }
-}
-
-//这里按官网写法会报错Navigator operation requested with a context that does not include a Navigat
-//需要包裹如下代码，才可正确执行
-class RouterContent extends StatefulWidget {
-  const RouterContent({Key? key}) : super(key: key);
-
-  @override
-  _RouterContent createState() => _RouterContent();
-}
-
-class _RouterContent extends State<RouterContent> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('我是首页'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text('hahahaha'),
-          ElevatedButton(
-            child: const Text('打开新页面'),
-            // style: ButtonStyle(
-            //     textStyle: MaterialStateProperty.all(
-            //       const TextStyle(fontSize: 18.0, color: Colors.blue),
-            //     )
-            // ),
-            onPressed: () async {
-              var result = await Navigator.of(context)
-                  .pushNamed("new_route", arguments: "hi");
-              // var result = await Navigator.push(
-              //   context,
-              //   // MaterialPageRoute 继承自 PageRoute 类
-              //   // PageRoute是个抽象类，表示占有整个屏幕空间的一个路由页面
-              //   // 包括了路由构建以及切换时过渡动画的相关接口和属性
-              //   MaterialPageRoute(
-              //       builder: (context) {
-              //         return const NewRoute(
-              //             text: "我是提示耶"
-              //         );
-              //       }
-              //   ),
-              // );
-              // print("路由返回值：$result");
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(builder: (context) {
-              //       return const NewRoute();
-              //     })
-              // );
-            },
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class NewRoute extends StatelessWidget {
-  const NewRoute({Key? key, required this.text}) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    //获取路由参数
-    var args = ModalRoute.of(context)!.settings.arguments;
-    print(args);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("新路由"),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Text(text),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, "我是返回值"),
-              child: const Text("返回"),
-            )
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('标题'),
         ),
+        body: const PageContent(),
       ),
+      theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class UnKnown extends StatelessWidget {
-  const UnKnown({Key? key}) : super(key: key);
-
+//顶部图片
+class PageContent extends StatelessWidget {
+  const PageContent({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('404')),
-      body: const Center(
-        child: Text("404"),
-      ),
+    return Column(
+      children: <Widget>[
+        Text(
+            "hello world",
+          style: TextStyle(
+            color: Colors.red,
+            fontSize: 30.0,
+            height: 1.8,
+            background: Paint()..color=Colors.blue,
+            decoration: TextDecoration.underline,
+            decorationColor: Colors.red,
+            decorationStyle: TextDecorationStyle.dashed
+          ),
+          textAlign: TextAlign.end,
+        ),
+        const Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: "这是个红色的span",
+                style: TextStyle(
+                  color: Colors.red
+                )
+              ),
+              TextSpan(
+                text: "这是个蓝色的span",
+                style: TextStyle(
+                  color: Colors.blue
+                )
+              )
+            ]
+          )
+        ),
+        ElevatedButton(
+          child: const Text('按钮1'),
+          onPressed: () {},
+        ),
+        TextButton(
+          child: const Text('按钮2'),
+          onPressed: () {},
+        ),
+        OutlineButton(
+          child: const Text('按钮3'),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.thumb_up),
+          onPressed: () {},
+        ),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.send),
+          label: const Text("发送"),
+          onPressed: (){},
+        ),
+        const Image(
+          image: AssetImage("assets/images/top1.jpeg"),
+          width: 100.0,
+        ),
+        const Image(
+          image: NetworkImage("https://bkimg.cdn.bcebos.com/pic/d1a20cf431adcbef7d6228b0a9af2edda3cc9f35?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2UyMjA=,g_7,xp_5,yp_5/format,f_auto"),
+          width: 100.0,
+          color: Colors.blue,
+          colorBlendMode: BlendMode.difference,
+        ),
+        const Icon(
+          Icons.fingerprint,color: Colors.green,
+          size: 80.0,
+        ),
+
+      ],
     );
   }
 }

@@ -69,6 +69,7 @@ class _RouterContent extends State<RouterContent> {
             //     )
             // ),
             onPressed: () async {
+              //arguments 传递给页面的路由参数
               var result = await Navigator.of(context)
                   .pushNamed("new_route", arguments: "hi");
               // var result = await Navigator.push(
@@ -118,6 +119,7 @@ class NewRoute extends StatelessWidget {
           children: <Widget>[
             Text(text),
             ElevatedButton(
+              //pop携带返回值回到上个页面
               onPressed: () => Navigator.pop(context, "我是返回值"),
               child: const Text("返回"),
             )
