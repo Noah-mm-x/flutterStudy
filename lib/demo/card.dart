@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import './model/card_model.dart';
+import '../model/card_model.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(const MyApp());
