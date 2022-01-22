@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
+import 'package:flutter/rendering.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('标题1')),
-        body: const PageContent(),
+        body: const InfiniteListView(),
       ),
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
@@ -19,31 +21,67 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//顶部图片
-class PageContent extends StatelessWidget {
-  const PageContent({Key? key}) : super(key: key);
+class InfiniteListView extends StatefulWidget {
+  const InfiniteListView({Key? key}) : super(key: key);
+
+  @override
+  _InfiniteListViewState createState() => _InfiniteListViewState();
+}
+
+class _InfiniteListViewState extends State<InfiniteListView> {
+  static const loadingTag = "##loading##";
+  final _words = <String>[loadingTag];
+
+  @override
+  void initState() {
+    super.initState();
+    _retrieveData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget d1 = const Divider(
-      color: Colors.red,
-    );
-    Widget d2 = const Divider(
-      color: Colors.green,
-    );
-    // return ListView.separated(
     return ListView.separated(
-      itemCount: 100,
-      //强制高度为50
-      // itemExtent: 50.0,
-      //列表构造器
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(title: Text("$index"));
+      itemCount: _words.length,
+      itemBuilder: (context, index) {
+        //  如果到了表尾
+        if(_words[index] == loadingTag){
+        //  不足一百,再次加载数据
+          if(_words.length-1<100){
+            _retrieveData();
+            return Container(
+              padding: const EdgeInsets.all(20.0),
+              alignment: Alignment.center,
+              child: const SizedBox(
+                width: 24.0,
+                height: 24.0,
+                child: CircularProgressIndicator(strokeWidth: 2.0,),
+              ),
+            );
+          }else{
+            return Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(16.0),
+              child: const Text(
+                "没有更多了",
+                style: TextStyle(color: Colors.red),
+              ),
+            );
+          }
+        }
+        return ListTile(title: Text(_words[index]),);
       },
-      //  分割器构造器
-      separatorBuilder: (BuildContext context, int index) {
-        return index % 2 == 0 ? d1 : d2;
-      },
+      separatorBuilder: (context,index) => const Divider(height: .0,),
     );
+  }
+
+  void _retrieveData() {
+    Future.delayed(const Duration(seconds: 2)).then((e) {
+      setState(() {
+        _words.insertAll(
+            _words.length - 1,
+            generateWordPairs().take(20).map((e) => e.asPascalCase).toList()
+        );
+      });
+    });
   }
 }
